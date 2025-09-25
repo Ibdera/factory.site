@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrical Resources | Factory Knowledge Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .resource-card {
+            transition: all 0.3s ease;
+        }
+        .resource-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(74, 222, 128, 0.2);
+        }
+        .tab-active {
+            border-bottom: 3px solid #10b981;
+            color: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800" style="height: 80px;">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="flex items-center space-x-2 hover:text-blue-400 transition-colors">
+                    <img src="tore.png" alt="TORECAO" class="w-6 h-6 object-contain" style="filter: brightness(0) invert(1);" />
+                    <span class="text-xl font-bold">TORECAO</span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="mechanical.html" class="hover:text-blue-400 transition-colors">Mechanical</a>
+                    <a href="electrical.html" class="text-green-400" aria-current="page">Electrical</a>
+                    <a href="machine-file.html" class="hover:text-yellow-400 transition-colors">Machine Files</a>
+                </div>
+
+                <!-- Mobile Hamburger -->
+                <button class="md:hidden" id="mobileMenuButton">
+                    <i data-feather="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Breadcrumb -->
+            <div class="mt-2 text-sm text-gray-400">
+                <a href="index.html" class="hover:text-white">Home</a> > <a href="index.html" class="hover:text-white">CNC Milling Machine X-2000</a> > <span>Electrical</span>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-black/95 absolute top-full left-0 right-0 py-4 px-4 border-t border-gray-800">
+            <div class="flex flex-col space-y-4">
+                <a href="mechanical.html" class="hover:text-blue-400 transition-colors py-2">Mechanical</a>
+                <a href="electrical.html" class="text-green-400 py-2" aria-current="page">Electrical</a>
+                <a href="machine-file.html" class="hover:text-yellow-400 transition-colors py-2">Machine Files</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pt-24 pb-12 overflow-x-hidden">
+        <!-- Page Header -->
+        <div class="mb-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Electrical Resources</h1>
+            <p class="text-xl text-gray-400 max-w-3xl mx-auto">Wiring diagrams, control panel documentation, and electrical schematics</p>
+        </div>
+
+        <!-- Direct Media Gallery -->
+        <div id="mediaGallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+    </main>
+
+    <!-- Embedded Viewer Modal (same structure as mechanical) -->
+    <div id="viewerModal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/80"></div>
+        <div class="absolute inset-0 p-4 md:p-8 flex items-center justify-center">
+            <div class="w-full max-w-6xl bg-gray-900 border border-gray-800 rounded-xl shadow-2xl overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-gray-900/80">
+                    <div class="flex items-center gap-3">
+                        <i data-feather="folder" class="w-5 h-5 text-green-400"></i>
+                        <h3 id="viewerTitle" class="text-lg font-semibold">Viewer</h3>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a id="viewerDownload" href="#" download class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg flex items-center" aria-label="Download file">
+                            <i data-feather="download" class="w-4 h-4 mr-1"></i>
+                            <span class="hidden sm:inline">Download</span>
+                        </a>
+                        <button id="viewerClose" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg flex items-center" aria-label="Close viewer">
+                            <i data-feather="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-black">
+                    <div class="relative w-full" style="height: 70vh;">
+                        <div id="pdfContainer" class="absolute inset-0 hidden">
+                            <iframe id="pdfFrame" class="w-full h-full" title="PDF Viewer"></iframe>
+                        </div>
+                        <div id="videoContainer" class="absolute inset-0 hidden">
+                            <video id="videoPlayer" class="w-full h-full" controls playsinline></video>
+                        </div>
+                        <div id="excelContainer" class="absolute inset-0 hidden">
+                            <iframe id="excelFrame" class="w-full h-full" title="Excel Viewer"></iframe>
+                        </div>
+                        <div id="modelContainer" class="absolute inset-0 hidden">
+                            <model-viewer id="modelViewer" class="w-full h-full" camera-controls auto-rotate ar shadow-intensity="1"></model-viewer>
+                        </div>
+                        <div id="fallbackContainer" class="absolute inset-0 hidden flex items-center justify-center">
+                            <div class="text-center text-gray-300 p-6">
+                                <p class="mb-4">This file type isn't supported for in-browser viewing.</p>
+                                <a id="fallbackDownload" href="#" download class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                                    <i data-feather="download" class="w-4 h-4 mr-2"></i> Download File
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <script>
+        feather.replace();
+        
+        // Language detection and translation
+        const translations = {
+            'en': {
+                'nav.mechanical': 'Mechanical',
+                'nav.electrical': 'Electrical',
+                'nav.machineFiles': 'Machine Files',
+                'page.title': 'Electrical Resources',
+                'page.subtitle': 'Wiring diagrams, control panel documentation, and electrical schematics',
+                'viewer.title': 'Viewer',
+                'download': 'Download',
+                'open': 'Open'
+            },
+            'fr': {
+                'nav.mechanical': 'Mécanique',
+                'nav.electrical': 'Électrique',
+                'nav.machineFiles': 'Fichiers Machine',
+                'page.title': 'Ressources Électriques',
+                'page.subtitle': 'Schémas de câblage, documentation du panneau de contrôle et schémas électriques',
+                'viewer.title': 'Visionneuse',
+                'download': 'Télécharger',
+                'open': 'Ouvrir'
+            },
+            'es': {
+                'nav.mechanical': 'Mecánico',
+                'nav.electrical': 'Eléctrico',
+                'nav.machineFiles': 'Archivos de Máquina',
+                'page.title': 'Recursos Eléctricos',
+                'page.subtitle': 'Diagramas de cableado, documentación del panel de control y esquemas eléctricos',
+                'viewer.title': 'Visor',
+                'download': 'Descargar',
+                'open': 'Abrir'
+            },
+            'de': {
+                'nav.mechanical': 'Mechanisch',
+                'nav.electrical': 'Elektrisch',
+                'nav.machineFiles': 'Maschinendateien',
+                'page.title': 'Elektrische Ressourcen',
+                'page.subtitle': 'Verdrahtungsdiagramme, Bedienfeld-Dokumentation und elektrische Schemata',
+                'viewer.title': 'Betrachter',
+                'download': 'Herunterladen',
+                'open': 'Öffnen'
+            }
+        };
+
+        function detectLanguage() {
+            const browserLang = navigator.language || navigator.userLanguage;
+            const langCode = browserLang.split('-')[0];
+            return translations[langCode] ? langCode : 'en';
+        }
+
+        function translatePage(lang) {
+            const t = translations[lang];
+            if (!t) return;
+
+            // Update navigation
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === 'mechanical.html') {
+                    link.textContent = t['nav.mechanical'];
+                } else if (href === 'electrical.html') {
+                    link.textContent = t['nav.electrical'];
+                } else if (href === 'machine-file.html') {
+                    link.textContent = t['nav.machineFiles'];
+                }
+            });
+
+            // Update page title and subtitle
+            const pageTitle = document.querySelector('h1');
+            const pageSubtitle = document.querySelector('main p');
+            if (pageTitle) pageTitle.textContent = t['page.title'];
+            if (pageSubtitle) pageSubtitle.textContent = t['page.subtitle'];
+
+            // Update viewer modal
+            const viewerTitle = document.getElementById('viewerTitle');
+            if (viewerTitle) viewerTitle.textContent = t['viewer.title'];
+        }
+
+        // Apply language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const userLang = detectLanguage();
+            translatePage(userLang);
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.innerHTML = mobileMenu.classList.contains('hidden') ? 
+                '<i data-feather="menu" class="w-6 h-6"></i>' : 
+                '<i data-feather="x" class="w-6 h-6"></i>';
+            feather.replace();
+        });
+        
+        // Simple media gallery configuration (add your files below)
+        const mediaItems = [
+            { title: 'Main Power Circuit', type: 'pdf', url: 'assets/pdfs/main-power-circuit.pdf' },
+            { title: 'Control Panel Overview', type: 'video', url: 'assets/videos/control-panel-overview.mp4' },
+            { title: 'Electrical Manual', type: 'pdf', url: 'assets/pdfs/electrical-manual.pdf' }
+        ];
+
+        function getBadgeLabel(type) {
+            if (type === 'image') return 'Image';
+            if (type === 'video') return 'Video';
+            if (type === 'model') return '3D Model';
+            if (type === 'pdf') return 'PDF';
+            return 'File';
+        }
+
+        function renderGallery(items) {
+            const gallery = document.getElementById('mediaGallery');
+            gallery.innerHTML = '';
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-900 rounded-xl overflow-hidden border border-gray-800 h-full flex flex-col';
+
+                const mediaWrap = document.createElement('div');
+                mediaWrap.className = 'relative h-48 overflow-hidden flex items-center justify-center bg-gray-800';
+                const badge = document.createElement('div');
+                badge.className = 'absolute top-2 right-2 bg-green-500/90 text-xs px-2 py-1 rounded';
+                badge.textContent = getBadgeLabel(item.type);
+
+                if (item.type === 'image') {
+                    const img = document.createElement('img');
+                    img.src = item.url;
+                    img.alt = item.title || 'Image';
+                    img.className = 'w-full h-full object-cover';
+                    mediaWrap.appendChild(img);
+                } else if (item.type === 'video') {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'w-full h-full flex items-center justify-center text-gray-300';
+                    thumb.innerHTML = '<i data-feather="play" class="w-12 h-12"></i>';
+                    mediaWrap.appendChild(thumb);
+                } else if (item.type === 'model') {
+                    const thumb = document.createElement('div');
+                    thumb.className = 'w-full h-full flex items-center justify-center text-gray-300';
+                    thumb.innerHTML = '<i data-feather="box" class="w-12 h-12"></i>';
+                    mediaWrap.appendChild(thumb);
+                } else if (item.type === 'pdf') {
+                    const icon = document.createElement('div');
+                    icon.className = 'w-full h-full flex items-center justify-center text-gray-300';
+                    icon.innerHTML = '<i data-feather="file-text" class="w-12 h-12"></i>';
+                    mediaWrap.appendChild(icon);
+                }
+                mediaWrap.appendChild(badge);
+
+                const body = document.createElement('div');
+                body.className = 'p-4 flex-1 flex flex-col';
+                const h3 = document.createElement('h3');
+                h3.className = 'text-xl font-bold mb-2';
+                h3.textContent = item.title || 'File';
+                const actions = document.createElement('div');
+                actions.className = 'flex items-center gap-2 mt-auto';
+
+                const openBtn = document.createElement('button');
+                openBtn.className = 'open-viewer flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg flex items-center justify-center';
+                openBtn.setAttribute('data-type', item.type);
+                openBtn.setAttribute('data-url', item.url);
+                openBtn.setAttribute('data-title', item.title || 'File');
+                openBtn.innerHTML = '<i data-feather="eye" class="w-4 h-4 mr-2"></i> Open';
+
+                const dl = document.createElement('a');
+                dl.className = 'download-link bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg flex items-center justify-center';
+                dl.href = item.url;
+                dl.setAttribute('download', '');
+                dl.setAttribute('aria-label', 'Download');
+                dl.innerHTML = '<i data-feather="download" class="w-4 h-4"></i>';
+
+                actions.appendChild(openBtn);
+                actions.appendChild(dl);
+                body.appendChild(h3);
+                body.appendChild(actions);
+
+                card.appendChild(mediaWrap);
+                card.appendChild(body);
+                gallery.appendChild(card);
+            });
+            feather.replace();
+        }
+
+        renderGallery(mediaItems);
+
+        // Embedded viewer wiring
+        const modal = document.getElementById('viewerModal');
+        const viewerTitle = document.getElementById('viewerTitle');
+        const viewerDownload = document.getElementById('viewerDownload');
+        const closeBtn = document.getElementById('viewerClose');
+        const pdfContainer = document.getElementById('pdfContainer');
+        const pdfFrame = document.getElementById('pdfFrame');
+        const videoContainer = document.getElementById('videoContainer');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const excelContainer = document.getElementById('excelContainer');
+        const excelFrame = document.getElementById('excelFrame');
+        const modelContainer = document.getElementById('modelContainer');
+        const modelViewer = document.getElementById('modelViewer');
+        const fallbackContainer = document.getElementById('fallbackContainer');
+        const fallbackDownload = document.getElementById('fallbackDownload');
+
+        function hideAllContainers() {
+            pdfContainer.classList.add('hidden');
+            videoContainer.classList.add('hidden');
+            excelContainer.classList.add('hidden');
+            modelContainer.classList.add('hidden');
+            fallbackContainer.classList.add('hidden');
+        }
+
+        function openModal() {
+            modal.classList.remove('hidden');
+            feather.replace();
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            videoPlayer.pause();
+            videoPlayer.removeAttribute('src');
+            pdfFrame.removeAttribute('src');
+            excelFrame.removeAttribute('src');
+            modelViewer.removeAttribute('src');
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        document.querySelectorAll('.open-viewer').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.getAttribute('data-type');
+                const url = btn.getAttribute('data-url');
+                const title = btn.getAttribute('data-title') || 'Viewer';
+
+                viewerTitle.textContent = title;
+                viewerDownload.setAttribute('href', url);
+                fallbackDownload.setAttribute('href', url);
+
+                hideAllContainers();
+
+                if (type === 'pdf') {
+                    pdfContainer.classList.remove('hidden');
+                    pdfFrame.src = url + '#toolbar=1&navpanes=0&scrollbar=1';
+                    openModal();
+                    return;
+                }
+                if (type === 'video') {
+                    videoContainer.classList.remove('hidden');
+                    videoPlayer.src = url;
+                    openModal();
+                    return;
+                }
+
+                if (type === 'excel') {
+                    excelContainer.classList.remove('hidden');
+                    const absolute = url.startsWith('http') ? url : (location.origin + '/' + url.replace(/^\//, ''));
+                    const office = 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(absolute);
+                    const google = 'https://docs.google.com/gview?embedded=1&url=' + encodeURIComponent(absolute);
+                    excelFrame.src = office;
+                    openModal();
+                    return;
+                }
+                if (type === 'image') {
+                    // For image files (including JFIF), show them directly in the modal
+                    videoContainer.classList.remove('hidden');
+                    videoPlayer.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = title || 'Image';
+                    img.className = 'w-full h-full object-contain';
+                    img.onload = function() {
+                        openModal();
+                    };
+                    img.onerror = function() {
+                        // If image fails to load, show fallback
+                        videoPlayer.innerHTML = `
+                            <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                <div class="text-center">
+                                    <i data-feather="image" class="w-16 h-16 mx-auto mb-4"></i>
+                                    <p class="text-lg mb-4">Image Preview</p>
+                                    <p class="text-sm text-gray-400 mb-4">Unable to load image preview</p>
+                                    <a href="${url}" download class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                                        <i data-feather="download" class="w-4 h-4 mr-2"></i> Download Image
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                        feather.replace();
+                        openModal();
+                    };
+                    videoPlayer.appendChild(img);
+                    return;
+                }
+
+                if (type === 'model') {
+                    modelContainer.classList.remove('hidden');
+                    modelViewer.src = url;
+                    openModal();
+                    return;
+                }
+
+                fallbackContainer.classList.remove('hidden');
+                openModal();
+            });
+        });
+    </script>
+</body>
+</html>
