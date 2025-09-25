@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Detail | Factory Knowledge Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        .section-transition {
+            transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .hover-glow {
+            filter: drop-shadow(0 0 8px rgba(56, 182, 255, 0.4));
+        }
+        .mobile-expanded {
+            height: 50vh !important;
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-sans">
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800" style="height: 80px;">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <a href="/" class="flex items-center space-x-2 hover:text-blue-400 transition-colors">
+                    <i data-feather="cpu" class="w-6 h-6 text-blue-400"></i>
+                    <span class="text-xl font-bold">Site_Djamel</span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="mechanical.html" class="hover:text-blue-400 transition-colors">Mechanical</a>
+                    <a href="electrical.html" class="hover:text-green-400 transition-colors">Electrical</a>
+                    <a href="machine-file.html" class="hover:text-yellow-400 transition-colors">Machine Files</a>
+                </div>
+
+                <!-- Mobile Hamburger -->
+                <button class="md:hidden" id="mobileMenuButton">
+                    <i data-feather="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Breadcrumb -->
+            <div class="mt-2 text-sm text-gray-400">
+                <a href="/" class="hover:text-white">Home</a> > <span>CNC Milling Machine X-2000</span>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-black/95 absolute top-full left-0 right-0 py-4 px-4 border-t border-gray-800">
+            <div class="flex flex-col space-y-4">
+                <a href="mechanical.html" class="hover:text-blue-400 transition-colors py-2">Mechanical</a>
+                <a href="electrical.html" class="hover:text-green-400 transition-colors py-2">Electrical</a>
+                <a href="machine-file.html" class="hover:text-yellow-400 transition-colors py-2">Machine Files</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="relative h-64 md:h-96 w-full overflow-hidden mt-20">
+        <div class="absolute inset-0 bg-black/70 z-10"></div>
+        <img src="http://static.photos/industry/1200x630/42" alt="Industrial Machine" class="w-full h-full object-cover blur-sm">
+        <div class="absolute inset-0 z-20 flex items-center justify-center">
+            <div class="text-center px-4">
+                <h1 class="text-4xl md:text-6xl font-bold mb-2">CNC Milling Machine X-2000</h1>
+                <p class="text-xl md:text-2xl text-blue-300">Precision machining for aerospace components</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Interaction Area -->
+    <main class="container mx-auto px-4 pt-24 pb-8 md:pt-28 md:pb-12 overflow-x-hidden">
+        <div class="flex flex-col md:flex-row md:h-[65vh] gap-4 md:gap-6">
+            <!-- Mechanical Section -->
+            <a href="mechanical.html" class="section-transition flex-1 bg-gray-900 rounded-xl overflow-hidden relative group hover:flex-[2] md:hover:flex-[3] hover:hover-glow border border-gray-800">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                <img src="mec_pic.png" alt="Mechanical Components" class="w-full h-full object-cover opacity-70">
+                <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center z-10">
+                    <div class="bg-black/50 backdrop-blur-sm p-6 rounded-xl max-w-md">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-2 text-blue-300">Mechanical</h2>
+                        <p class="text-lg md:text-xl text-gray-300">View 3D models and diagrams</p>
+                        <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <i data-feather="arrow-right-circle" class="w-12 h-12 text-blue-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Electrical Section -->
+            <a href="electrical.html" class="section-transition flex-1 bg-gray-900 rounded-xl overflow-hidden relative group hover:flex-[2] md:hover:flex-[3] hover:hover-glow border border-gray-800">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                <img src="elec_pic.png" alt="Electrical Components" class="w-full h-full object-cover opacity-70">
+                <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center z-10">
+                    <div class="bg-black/50 backdrop-blur-sm p-6 rounded-xl max-w-md">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-2 text-green-300">Electrical</h2>
+                        <p class="text-lg md:text-xl text-gray-300">Wiring diagrams and control panel docs</p>
+                        <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <i data-feather="arrow-right-circle" class="w-12 h-12 text-green-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Machine File Section -->
+            <a href="machine-file.html" class="section-transition flex-1 bg-gray-900 rounded-xl overflow-hidden relative group hover:flex-[2] md:hover:flex-[3] hover:hover-glow border border-gray-800">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                <img src="files_pic.png" alt="Documentation" class="w-full h-full object-cover opacity-70">
+                <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center z-10">
+                    <div class="bg-black/50 backdrop-blur-sm p-6 rounded-xl max-w-md">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-2 text-yellow-300">Machine File</h2>
+                        <p class="text-lg md:text-xl text-gray-300">Downloadable manuals and resources</p>
+                        <div class="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <i data-feather="arrow-right-circle" class="w-12 h-12 text-yellow-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        feather.replace();
+        
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.innerHTML = mobileMenu.classList.contains('hidden') ? 
+                '<i data-feather="menu" class="w-6 h-6"></i>' : 
+                '<i data-feather="x" class="w-6 h-6"></i>';
+            feather.replace();
+        });
+        
+        // Mobile interaction handling
+        if (window.innerWidth < 768) {
+            const sections = document.querySelectorAll('a[href$="mechanical.html"], a[href$="electrical.html"], a[href$="machine-file.html"]');
+            
+            sections.forEach(section => {
+                section.addEventListener('click', function(e) {
+                    // Prevent default link behavior
+                    e.preventDefault();
+                    
+                    // Collapse all sections first
+                    sections.forEach(s => {
+                        s.classList.remove('mobile-expanded');
+                    });
+                    
+                    // Expand clicked section
+                    this.classList.add('mobile-expanded');
+                    
+                    // Navigate after slight delay for animation
+                    setTimeout(() => {
+                        window.location.href = this.href;
+                    }, 500);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
+
